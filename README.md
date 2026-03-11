@@ -286,16 +286,7 @@ llm = ChatOpenAI(
 ### Open Source License
 This project is released under the **MIT License**, allowing both academic and commercial use with appropriate attribution.
 
-### Citation
-If you use this system in research, please cite:
-```
-@software{medical_diagnosis_assistant_2024,
-  title = {Medical Diagnosis Assistant: AI-Powered Clinical Decision Support},
-  author = {Development Team},
-  year = {2024},
-  url = {https://github.com/yourusername/medical-diagnosis-assistant}
-}
-```
+
 
 ### Acknowledgments
 - **DeepSeek**: For providing the foundational language model
@@ -303,20 +294,7 @@ If you use this system in research, please cite:
 - **Streamlit**: For rapid application development interface
 - **Medical Professionals**: For clinical guidance and validation
 
-## 📞 Contact & Feedback
 
-### Development Team
-- **Technical Support**: GitHub Issues or email support@example.com
-- **Clinical Questions**: clinical@example.com
-- **Partnership Inquiries**: partnerships@example.com
-
-### Feedback Channels
-- **User Surveys**: Regular feedback collection for improvement
-- **Feature Requests**: Community voting on future developments
-- **Bug Reporting**: Structured process for issue documentation
-- **Success Stories**: Share how the system has helped in clinical practice
-
----
 
 ## ⚠️ Important Disclaimer
 
