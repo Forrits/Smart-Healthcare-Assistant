@@ -55,6 +55,8 @@ def initial_assessment_node(state: MedicalDiagnosisState) -> Dict[str, Any]:
         symptoms = state["symptoms"]
         vital_signs = state["vital_signs"]
 
+
+
         assessment_prompt = f"""
         你是一个经验丰富的急诊科医生。请根据以下信息进行初步评估：
 
@@ -197,14 +199,14 @@ def make_diagnosis_node(state: MedicalDiagnosisState) -> Dict[str, Any]:
         vital_signs = state["vital_signs"]
         lab_results = state["lab_results"]
 ################################################################################################
-      
+
         # 构建更精准的检索查询
         test_results_text = ", ".join([f"{r['test_name']}: {r['result']}" for r in lab_results])
         rag_query = f"{patient_info.get('age', '')}岁{patient_info.get('gender', '')}，{test_results_text}，症状：{', '.join([s['symptom'] for s in symptoms])}，诊断"
         # 补充检索更多相关知识
         additional_knowledge = retrieve_medical_knowledge(rag_query, k=4)
         full_knowledge = additional_knowledge
-       
+      
 
         diagnosis_prompt = f"""
         你是一个专业的诊断医生。请根据以下信息进行诊断分析：
@@ -299,7 +301,7 @@ def create_treatment_plan_node(state: MedicalDiagnosisState) -> Dict[str, Any]:
         请以JSON格式返回：
         {{
             "medications": [
-                {{"name": "药物名", "dosage": "剂量", "frequency": "频次", "duration": "疗程"}}
+                {{"name": "药物名", "dosage": "剂量", "frequency": "频次", "duration": "疗程"，"detail":"适应症"，"dangerous"："禁忌"}}
             ],
             "non_pharmacological": ["非药物措施1", "非药物措施2"],
             "lifestyle_advice": ["生活建议1", "生活建议2"],
@@ -533,16 +535,15 @@ def create_medical_diagnosis_assistant():
             return "doctor_approval_node"
         return "create_treatment"
 
-    def route_after_treatment(state: MedicalDiagnosisState) -> Literal["doctor_approval_node", "follow_up_planning"]:
-        """治疗方案制定后的路由（修复节点名引用）"""
-        return "doctor_approval_node"
+    # def route_after_treatment(state: MedicalDiagnosisState) -> Literal["doctor_approval_node", "follow_up_planning"]:
+    #     """治疗方案制定后的路由（修复节点名引用）"""
+    #     return "doctor_approval_node"
 
     def route_after_approval(state: MedicalDiagnosisState) -> Literal[
         "follow_up_planning", "make_diagnosis", "create_treatment"]:
         """医生审批后的路由"""
         stage = state.get("current_stage", "")
         approvals = state.get("doctor_approval", {})
-
         if stage == "revision_needed":
             if not approvals.get("diagnosis", True):
                 return "make_diagnosis"
@@ -577,6 +578,8 @@ def create_medical_diagnosis_assistant():
 
     workflow.add_edge("order_tests", "make_diagnosis")
 
+
+    #这个边是诊断后
     workflow.add_conditional_edges(
         "make_diagnosis",
         route_after_diagnosis,
@@ -775,7 +778,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 主标题
-st.title("🏥 智能医疗诊断助手")
+
+st.title("🤖  智能医疗诊断助手 🩺 ")
 st.divider()
 
 # 优化布局：将患者信息移到主界面顶部，而非侧边栏
@@ -783,19 +787,19 @@ with st.container():
     st.subheader("📋 患者基本信息")
     col1, col2, col3 = st.columns(3)
     with col1:
-        name = st.text_input("姓名", value="张三", placeholder="请输入患者姓名")
+        name = st.text_input("姓名", value="", placeholder="请输入患者姓名")
     with col2:
-        age = st.number_input("年龄", min_value=0, max_value=120, value=45, help="请输入患者实际年龄")
+        age = st.number_input("年龄", min_value=0, max_value=120, value=20, help="请输入患者实际年龄")
     with col3:
         gender = st.selectbox("性别", ["男", "女", "其他"], index=0)
 
     col4, col5 = st.columns([2, 1])
     with col4:
-        medical_history = st.text_area("既往病史", value="高血压, 糖尿病", placeholder="例如：高血压, 糖尿病, 冠心病")
+        medical_history = st.text_area("既往病史", value="", placeholder="例如：高血压, 糖尿病, 冠心病")
     with col5:
-        allergies = st.text_area("过敏史", value="青霉素", placeholder="例如：青霉素, 海鲜, 花粉")
+        allergies = st.text_area("过敏史", value="", placeholder="例如：青霉素, 海鲜, 花粉")
 
-    medications = st.text_input("当前用药", value="降压药, 二甲双胍", placeholder="例如：降压药, 二甲双胍, 阿司匹林")
+    medications = st.text_input("当前用药", value="", placeholder="例如：降压药, 二甲双胍, 阿司匹林")
 
 # 主体部分：症状和生命体征（优化布局）
 st.subheader("🩺 临床信息录入")
@@ -817,17 +821,17 @@ with tab1:
                 col_sym1, col_sym2 = st.columns(2)
                 with col_sym1:
                     symptom_name = st.text_input(f"症状名称", key=f"symptom_name_{i}",
-                                                 value="胸痛" if i == 0 else "",
+                                                 value="" if i == 0 else "",
                                                  placeholder="例如：头痛、咳嗽、胸闷")
                     duration = st.text_input(f"持续时间", key=f"duration_{i}",
-                                             value="2小时" if i == 0 else "",
+                                             value="" if i == 0 else "",
                                              placeholder="例如：3天、2小时、1周")
                 with col_sym2:
                     severity = st.selectbox(f"严重程度", key=f"severity_{i}",
                                             options=["轻度", "中度", "重度"],
                                             index=1 if i == 0 else 0)
                     details = st.text_input(f"详情/位置/诱因", key=f"details_{i}",
-                                            value="胸骨后" if i == 0 else "",
+                                            value="" if i == 0 else "",
                                             placeholder="例如：胸骨后、左侧头部、运动后加重")
 
                 if symptom_name:
@@ -1035,7 +1039,9 @@ if diagnose_button:
                                             <b>💊 {med.get('name', '未知药物')}</b><br>
                                             剂量：{med.get('dosage', '未指定')}<br>
                                             频次：{med.get('frequency', '未指定')}<br>
-                                            疗程：{med.get('duration', '未指定')}
+                                            疗程：{med.get('duration', '未指定')}<br>
+                                            适应症：{med.get('detail', '未指定')}<br>
+                                            ⚠️禁忌：{med.get('dangerous', '未指定')}<br>
                                         </div>
                                         """, unsafe_allow_html=True)
                                 else:
