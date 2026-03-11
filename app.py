@@ -197,14 +197,14 @@ def make_diagnosis_node(state: MedicalDiagnosisState) -> Dict[str, Any]:
         vital_signs = state["vital_signs"]
         lab_results = state["lab_results"]
 ################################################################################################
-        print("输出的诊断结果：",state["lab_results"])
+      
         # 构建更精准的检索查询
         test_results_text = ", ".join([f"{r['test_name']}: {r['result']}" for r in lab_results])
         rag_query = f"{patient_info.get('age', '')}岁{patient_info.get('gender', '')}，{test_results_text}，症状：{', '.join([s['symptom'] for s in symptoms])}，诊断"
         # 补充检索更多相关知识
         additional_knowledge = retrieve_medical_knowledge(rag_query, k=4)
         full_knowledge = additional_knowledge
-        print("本地命中内容：",full_knowledge)
+       
 
         diagnosis_prompt = f"""
         你是一个专业的诊断医生。请根据以下信息进行诊断分析：
