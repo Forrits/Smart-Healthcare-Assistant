@@ -34,7 +34,7 @@ class MedicalRAG:
         # 初始化嵌入模型
         self.embeddings = OpenAIEmbeddings(
             model="BAAI/bge-large-zh-v1.5",
-            api_key="sk-nnbtrcocdpjbbksvonxsgorqgigqsckefstlztcmboafdvwx",
+            api_key=API-KEY,
             base_url="https://api.siliconflow.cn/v1/"
         )
 
