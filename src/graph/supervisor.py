@@ -71,7 +71,7 @@ def supervisor_node(state: AgentState):
     print(f"当前任务列表: {task_list}")
 
     # ==========================================
-    # 反思机制（你原版 100% 保留）
+    # 反思机制
     # ==========================================
     # just_completed = any(
     #     t.get("status") == "completed"
