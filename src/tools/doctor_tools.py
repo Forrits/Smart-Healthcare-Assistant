@@ -154,16 +154,93 @@ def make_diagnosis(
         return f"诊断生成失败：{str(e)}"
 
 
+@tool
+def update_allergy_history(
+    drug_allergy: Optional[str] = None,
+    food_allergy: Optional[str] = None,
+    other_allergy: Optional[str] = None
+):
+    """
+    记录患者过敏史，包括药物过敏、食物过敏、其他过敏。
+    用于安全用药、避免医疗风险。
+    """
+    print("使用工具：更新过敏史")
+    updates = {}
+    if drug_allergy: updates["drug_allergy"] = drug_allergy
+    if food_allergy: updates["food_allergy"] = food_allergy
+    if other_allergy: updates["other_allergy"] = other_allergy
+
+    return {
+        "patient_info_updates": updates,
+        "_append_fields": ["drug_allergy", "food_allergy", "other_allergy"]
+    }
 
 
+@tool
+def update_medical_history(
+    chronic_disease: Optional[str] = None,
+    surgery_history: Optional[str] = None,
+    infectious_history: Optional[str] = None
+):
+    """
+    更新既往病史：
+    - 慢性病（高血压、糖尿病等）
+    - 手术史
+    - 传染病史
+    """
+    print("使用工具：更新既往病史")
+    updates = {}
+    if chronic_disease: updates["chronic_disease"] = chronic_disease
+    if surgery_history: updates["surgery_history"] = surgery_history
+    if infectious_history: updates["infectious_history"] = infectious_history
+
+    return {
+        "patient_info_updates": updates,
+        "_append_fields": ["chronic_disease", "surgery_history", "infectious_history"]
+    }
 
 
-
-
-
-
-
+@tool
+def add_medical_advice(
+    advice_title: str,
+    advice_content: str
+):
+    """
+    添加医嘱，如饮食禁忌、复查提醒、注意事项、护理方式等。
+    用于治疗方案补充。
+    """
+    print("使用工具：添加医嘱")
+    return {
+        "advice": {
+            "title": advice_title,
+            "content": advice_content
+        }
+    }
+@tool
+def prescribe_medication(
+    drug_name: str,
+    usage: str,
+    dosage: str,
+    frequency: str,
+    duration: str,
+    notes: Optional[str] = None
+):
+    """
+    开具正式用药处方，包含药名、用法、剂量、频次、疗程、注意事项。
+    """
+    print("使用工具：开具用药处方")
+    prescription = {
+        "drug_name": drug_name,
+        "usage": usage,
+        "dosage": dosage,
+        "frequency": frequency,
+        "duration": duration,
+        "notes": notes or "无特殊说明"
+    }
+    return {
+        "prescription": prescription
+    }
 
 
 # 把它们打包
-doctor_tools = [update_patient_record, make_diagnosis, order_lab_test]
+doctor_tools = [update_patient_record, make_diagnosis, order_lab_test,add_medical_advice,prescribe_medication]
