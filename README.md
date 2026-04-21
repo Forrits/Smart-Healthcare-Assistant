@@ -25,50 +25,49 @@
 
 ## 🗂 项目结构概览
 
-text .
+```text
 ├── main.py                        # Streamlit 入口 & 与 LangGraph 交互
 ├── .env                           # API Key 配置（DeepSeek / SiliconFlow）
 ├── chroma_medical_db/             # Chroma 向量库持久化目录
-├── src/
-│   ├── Rag/
-│   │   ├── setup.py               # RAG 初始化（Chroma + Embedding + Retriever）
-│   │   └── Local_file/       # 本地医学科普知识源
-│   ├── graph/
-│   │   ├── state.py               # LangGraph State 定义（AgentState 等）
-│   │   ├── builder.py             # LangGraph 构图与编译（get_compiled_graph）
-│   │   ├── supervisor.py          # Supervisor 节点：意图判断 + 任务拆分 + 调度
-│   │   ├── edges.py               # 路由边逻辑（doctor/tutor/image 等）
-│   │   └── reflectors/            # 任务结果反思相关（core/config）
-│   ├── nodes/
-│   │   ├── agents/
-│   │   │   ├── doctor.py          # 医生节点：多轮问诊 + 工具调用
-│   │   │   ├── medical_tutor.py   # 医学科普节点：RAG 检索 + 通俗解释
-│   │   │   ├── psychologist_node.py # 心理咨询节点：PHQ-9 + 情绪支持
-│   │   │   ├── image_analyst.py   # 影像分析节点：多模态视觉分析
-│   │   │   ├── challenger_node.py # 质疑者节点：对诊断进行挑刺与追问
-│   │   │   └── joker_chat.py      # 闲聊节点：通用聊天
-│   │   └── memory/
-│   │       ├── context_filter_node.py # 上下文过滤节点
-│   │       ├── context_trim_node.py   # 上下文裁剪节点
-│   │       └── memory_load_node.py    # 记忆加载节点（患者历史信息）
-│   ├── tools/
-│   │   ├── doctor_tools.py        # 医生工具：更新病历、开检查单、生成诊断
-│   │   ├── medical_tutor_tools.py # 科普工具：local_knowledge_search(RAG)
-│   │   ├── psychologist_tools.py  # 心理工具：PHQ-9 评分、情绪支持
-│   │   └── image_analyst_tools.py # 影像工具：X 光/CT、皮肤病变分析
-│   ├── stores/
-│   │   ├── base.py                # Store 基类
-│   │   ├── chat_store.py          # 聊天历史持久化
-│   │   ├── patient_store.py       # 患者长期信息持久化
-│   │   └── reflection_store.py    # 反思与评审记录持久化
-│   ├── prompts/
-│   │   ├── supervisor.txt         # Supervisor 路由提示词
-│   │   ├── plan.txt               # 任务规划提示词
-│   │   ├── doctor.txt             # 医生问诊提示词
-│   │   └── joker.txt              # 闲聊提示词
-│   └── until/
-│       └── init_llm.py            # 全局 LLM 初始化（DeepSeek）
-└── ...
+└── src/
+    ├── Rag/
+    │   ├── setup.py               # RAG 初始化（Chroma + Embedding + Retriever）
+    │   └── Local_file/            # 本地医学科普知识源（存放本地文件）
+    ├── graph/
+    │   ├── state.py               # LangGraph State 定义（AgentState 等）
+    │   ├── builder.py             # LangGraph 构图与编译（get_compiled_graph）
+    │   ├── supervisor.py          # Supervisor 节点：意图判断 + 任务拆分 + 调度
+    │   ├── edges.py               # 路由边逻辑（doctor/tutor/image 等）
+    │   └── reflectors/           # 任务结果反思相关（core/config）
+    ├── nodes/
+    │   ├── agents/
+    │   │   ├── doctor.py          # 医生节点：多轮问诊 + 工具调用
+    │   │   ├── medical_tutor.py   # 医学科普节点：RAG 检索 + 通俗解释
+    │   │   ├── psychologist_node.py # 心理咨询节点：PHQ-9 + 情绪支持
+    │   │   ├── image_analyst.py   # 影像分析节点：多模态视觉分析
+    │   │   ├── challenger_node.py # 质疑者节点：对诊断进行挑刺与追问
+    │   │   └── joker_chat.py      # 闲聊节点：通用聊天
+    │   └── memory/
+    │       ├── context_filter_node.py # 上下文过滤节点
+    │       ├── context_trim_node.py   # 上下文裁剪节点
+    │       └── memory_load_node.py    # 记忆加载节点（患者历史信息）
+    ├── tools/
+    │   ├── doctor_tools.py        # 医生工具：更新病历、开检查单、生成诊断
+    │   ├── medical_tutor_tools.py # 科普工具：local_knowledge_search(RAG)
+    │   ├── psychologist_tools.py  # 心理工具：PHQ-9 评分、情绪支持
+    │   └── image_analyst_tools.py # 影像工具：X光/CT、皮肤病变分析
+    ├── stores/
+    │   ├── base.py                # Store 基类
+    │   ├── chat_store.py          # 聊天历史持久化
+    │   ├── patient_store.py       # 患者长期信息持久化
+    │   └── reflection_store.py    # 反思与评审记录持久化
+    ├── prompts/
+    │   ├── supervisor.txt         # Supervisor 路由提示词
+    │   ├── plan.txt               # 任务规划提示词
+    │   ├── doctor.txt             # 医生问诊提示词
+    │   └── joker.txt              # 闲聊提示词
+    └── utils/                     # 修正原笔误：until → utils
+        └── init_llm.py            # 全局 LLM 初始化（DeepSeek）
 ---
 
 ## 🧠 架构说明
