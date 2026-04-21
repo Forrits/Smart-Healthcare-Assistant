@@ -1,322 +1,173 @@
-# 🩺 Medical Diagnosis Assistant - AI-Powered Clinical Decision Support System
+# 🏥 模块化医疗问诊多智能体系统（带任务规划与 RAG）
 
-## Overview
+基于 LangGraph + Streamlit 构建的模块化医疗问诊助手，通过“Supervisor 规划 + 多角色 Agent + 工具调用 + 本地医学科普 RAG”的方式，实现从闲聊、科普、临床问诊到影像分析的完整流程。
 
-**Medical Diagnosis Assistant** is an advanced clinical decision support system that leverages artificial intelligence to assist healthcare professionals in the diagnostic process. Built on modern AI frameworks, this tool simulates comprehensive medical reasoning workflows to provide preliminary diagnostic insights and treatment recommendations.
-
-## 🎯 Core Capabilities
-
-### Intelligent Diagnostic Workflow
-- **Multi-stage Reasoning**: Implements a structured diagnostic pipeline from symptom analysis to treatment planning
-- **Dynamic Symptom Assessment**: Supports real-time symptom addition and prioritization
-- **Vital Signs Integration**: Incorporates key physiological parameters (BP, HR, Temp, SpO₂)
-- **Risk Stratification**: Automatically categorizes cases by urgency level
-
-### Clinical Knowledge Enhancement
-- **Medical RAG System**: Retrieval-Augmented Generation with specialized medical knowledge base
-- **Evidence-Based Recommendations**: Grounds suggestions in medical literature and guidelines
-- **Differential Diagnosis**: Generates comprehensive differential diagnosis lists
-
-### User Experience
-- **Streamlit Interface**: Clean, intuitive web-based interface
-- **Real-time Progress Tracking**: Visual workflow progression with step-by-step updates
-- **Comprehensive Reporting**: Generates detailed clinical reports with structured sections
-
-## 🏗️ Architecture
-
-### System Components
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    User Interface Layer                      │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                Streamlit Web App                    │    │
-│  └─────────────────────────────────────────────────────┘    │
-├─────────────────────────────────────────────────────────────┤
-│                 Workflow Orchestration Layer                 │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │               LangGraph State Machine               │    │
-│  │  • Patient Intake → Assessment → Diagnosis → Plan   │    │
-│  └─────────────────────────────────────────────────────┘    │
-├─────────────────────────────────────────────────────────────┤
-│                  AI/ML Processing Layer                      │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │              DeepSeek LLM Integration               │    │
-│  │  • Symptom Analysis  • Treatment Planning          │    │
-│  │  • Risk Assessment   • Report Generation           │    │
-│  └─────────────────────────────────────────────────────┘    │
-├─────────────────────────────────────────────────────────────┤
-│                 Knowledge Management Layer                   │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │          Medical RAG (Retrieval System)            │    │
-│  │  • Vector Database  • Document Retrieval           │    │
-│  │  • Knowledge Base   • Evidence Sourcing            │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Key Technical Features
-- **State Management**: TypedDict-based state tracking across diagnostic stages
-- **Modular Design**: Separated concerns for maintainability and extensibility
-- **Error Handling**: Comprehensive error detection and recovery mechanisms
-- **Scalable Architecture**: Designed to accommodate additional medical specialties
-
-## 🚀 Quick Start Guide
-
-### Prerequisites
-- Python 3.8+
-- DeepSeek API Key (free tier available)
-- Basic understanding of clinical workflows
-
-### Installation Steps
-
-1. **Clone and Setup**
-   ```bash
-   git clone https://github.com/yourusername/medical-diagnosis-assistant.git
-   cd medical-diagnosis-assistant
-   ```
-
-2. **Environment Configuration**
-   ```bash
-   # Create virtual environment
-   python -m venv .venv
-   
-   # Activate (Windows)
-   .venv\Scripts\activate
-   
-   # Activate (Unix/Mac)
-   source .venv/bin/activate
-   ```
-
-3. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **API Configuration**
-   Create `.env` file:
-   ```env
-   DEEPSEEK_API_KEY="your_api_key_here"
-   ```
-
-5. **Launch Application**
-   ```bash
-   streamlit run app.py
-   ```
-
-## 📊 Diagnostic Process Flow
-
-### Phase 1: Patient Intake
-- **Demographic Data**: Age, gender, medical history
-- **Symptom Documentation**: Primary complaints with duration and severity
-- **Vital Signs Recording**: Current physiological measurements
-
-### Phase 2: Initial Assessment
-- **Urgency Classification**: Triage based on symptom severity
-- **Risk Factor Analysis**: Identification of critical indicators
-- **Preliminary Hypothesis**: Initial diagnostic considerations
-
-### Phase 3: Diagnostic Workup
-- **Test Recommendations**: Laboratory and imaging suggestions
-- **Differential Development**: Comprehensive differential diagnosis
-- **Specialty Consultation**: Referral recommendations if needed
-
-### Phase 4: Treatment Planning
-- **Therapeutic Options**: Medication and non-pharmacological interventions
-- **Monitoring Protocol**: Follow-up schedule and parameters
-- **Patient Education**: Self-care instructions and warning signs
-
-### Phase 5: Report Generation
-- **Structured Documentation**: Organized clinical summary
-- **Actionable Recommendations**: Clear next steps for care team
-- **Patient-Facing Summary**: Simplified version for patient understanding
-
-## 🔧 Advanced Configuration
-
-### Customizing Medical Knowledge Base
-```python
-# Example: Adding custom medical documents
-from medrag import MedicalRAG
-
-rag = MedicalRAG(
-    persist_directory="./custom_medical_db",
-    collection_name="specialty_knowledge"
-)
-
-# Load specialty-specific documents
-rag.load_documents_from_directory("./specialty_guidelines")
-```
-
-### Extending Diagnostic Workflow
-```python
-# Example: Adding custom diagnostic nodes
-def custom_specialty_assessment(state: MedicalDiagnosisState):
-    """Custom assessment for specific medical specialty"""
-    # Your custom logic here
-    return {"specialty_recommendations": [...]}
-
-# Register with workflow
-workflow.add_node("specialty_assessment", custom_specialty_assessment)
-```
-
-### Model Configuration
-```python
-# Custom LLM settings
-llm = ChatOpenAI(
-    model="deepseek-chat",
-    api_key=os.getenv("DEEPSEEK_API"),
-    base_url="https://api.deepseek.com/v1",
-    temperature=0.1,  # Lower for more consistent medical advice
-    max_tokens=2000   # Extended for comprehensive reports
-)
-```
-
-## 📈 Performance Metrics
-
-### System Evaluation
-- **Diagnostic Accuracy**: Comparative analysis with clinical guidelines
-- **Response Time**: Average processing time per case
-- **User Satisfaction**: Interface usability and workflow efficiency
-- **Knowledge Retrieval**: Precision and recall of medical information
-
-### Quality Assurance
-- **Clinical Validation**: Periodic review by medical professionals
-- **Algorithm Auditing**: Regular assessment of AI recommendations
-- **Bias Mitigation**: Monitoring for demographic or diagnostic biases
-- **Version Control**: Tracked changes to diagnostic algorithms
-
-## 🤝 Integration Possibilities
-
-### Healthcare Systems
-- **EHR Integration**: HL7/FHIR compatibility for patient data exchange
-- **Hospital Information Systems**: Admission and discharge coordination
-- **Laboratory Systems**: Automated test ordering and result interpretation
-
-### Telemedicine Platforms
-- **Remote Consultation**: Support for virtual healthcare delivery
-- **Mobile Applications**: Patient-facing symptom checkers
-- **Wearable Integration**: Continuous physiological monitoring
-
-### Research Applications
-- **Clinical Trials**: Patient screening and eligibility assessment
-- **Epidemiological Studies**: Pattern recognition in symptom clusters
-- **Medical Education**: Training tool for healthcare students
-
-## 🛡️ Safety & Compliance
-
-### Clinical Safety
-- **Clear Limitations**: Prominent display of AI assistant constraints
-- **Escalation Protocols**: Defined pathways for human clinician review
-- **Error Reporting**: Systematic capture and analysis of system errors
-- **Quality Checks**: Multi-stage validation of critical recommendations
-
-### Regulatory Considerations
-- **Medical Device Classification**: Understanding applicable regulations
-- **Data Privacy**: HIPAA/GDPR-compliant patient information handling
-- **Audit Trails**: Comprehensive logging of all diagnostic sessions
-- **Version Documentation**: Clear tracking of algorithm changes
-
-### Ethical Guidelines
-- **Transparency**: Clear communication of AI involvement in diagnosis
-- **Accountability**: Defined responsibility for clinical decisions
-- **Equity**: Efforts to ensure equitable access and performance
-- **Continuous Improvement**: Commitment to ongoing system enhancement
-
-## 🔮 Future Development Roadmap
-
-### Short-term (Q1-Q2 2025)
-- [ ] Multi-language support for global deployment
-- [ ] Enhanced symptom ontology with ICD-10/11 mapping
-- [ ] Integration with common medical coding systems
-- [ ] Mobile-responsive interface improvements
-
-### Medium-term (Q3-Q4 2025)
-- [ ] Specialty-specific modules (cardiology, neurology, etc.)
-- [ ] Predictive analytics for disease progression
-- [ ] Medication interaction checking
-- [ ] Image analysis integration (X-ray, MRI preliminary review)
-
-### Long-term (2026+)
-- [ ] Federated learning for privacy-preserving model improvement
-- [ ] Genomic data integration for personalized medicine
-- [ ] Real-time epidemic surveillance capabilities
-- [ ] Cross-institutional knowledge sharing protocols
-
-## 📚 Educational Resources
-
-### For Developers
-- **API Documentation**: Complete reference for system integration
-- **Tutorial Series**: Step-by-step implementation guides
-- **Code Examples**: Practical samples for common use cases
-- **Best Practices**: Recommended patterns for medical AI development
-
-### For Healthcare Professionals
-- **Clinical Guide**: How to effectively incorporate AI assistance
-- **Case Studies**: Real-world examples of system application
-- **Training Materials**: Resources for team onboarding
-- **Troubleshooting Guide**: Common issues and solutions
-
-### For Researchers
-- **Methodology Documentation**: Detailed explanation of AI approaches
-- **Validation Protocols**: Framework for system evaluation
-- **Data Collection Guidelines**: Standards for training data
-- **Publication Support**: Assistance with research dissemination
-
-## 🌐 Community & Support
-
-### Getting Help
-- **GitHub Issues**: Technical problems and feature requests
-- **Discussion Forum**: Clinical use cases and best practices
-- **Documentation Wiki**: Community-maintained knowledge base
-- **Office Hours**: Regular virtual sessions with development team
-
-### Contributing
-- **Code Contributions**: Guidelines for pull requests
-- **Documentation Improvements**: Help enhance educational materials
-- **Clinical Validation**: Participate in system testing and feedback
-- **Translation Assistance**: Support for internationalization efforts
-
-### Partnerships
-- **Healthcare Institutions**: Collaborative development opportunities
-- **Research Organizations**: Joint studies and validation projects
-- **Technology Companies**: Integration and scaling partnerships
-- **Educational Institutions**: Curriculum development and training
-
-## ⚖️ License & Attribution
-
-### Open Source License
-This project is released under the **MIT License**, allowing both academic and commercial use with appropriate attribution.
-
-
-
-### Acknowledgments
-- **DeepSeek**: For providing the foundational language model
-- **LangChain/LangGraph**: For workflow orchestration framework
-- **Streamlit**: For rapid application development interface
-- **Medical Professionals**: For clinical guidance and validation
-
-
-
-## ⚠️ Important Disclaimer
-
-**CRITICAL NOTICE FOR CLINICAL USE**
-
-This system is designed as a **clinical decision support tool** and **NOT** as a replacement for professional medical judgment.
-
-### Key Limitations:
-1. **Supplementary Role**: Always use in conjunction with qualified clinical assessment
-2. **Liability Exclusion**: Developers assume no responsibility for clinical outcomes
-3. **Validation Required**: All recommendations should be verified by licensed professionals
-4. **Emergency Situations**: Not suitable for life-threatening conditions requiring immediate intervention
-
-### Professional Responsibility:
-- **Ultimate Decision Authority**: Remains with the treating healthcare provider
-- **Documentation Requirements**: AI assistance should be documented in medical records
-- **Informed Consent**: Patients should be aware of AI involvement in their care
-- **Continuous Monitoring**: Regular review of system performance and recommendations
-
-### Regulatory Status:
-This software is provided for **educational and research purposes**. Clinical deployment may require additional regulatory approvals based on jurisdiction and intended use.
+> ⚠️ 本项目仅用于学习与演示，不构成任何医疗建议或诊断依据。如有健康问题，请及时线下就医。
 
 ---
 
-*Last Updated: March 2024 | Version: 2.0 | For the latest updates, visit our GitHub repository*
+## ✨ 核心特性
+
+- **多智能体协作**：包含医生、医学科普讲师、心理咨询师、医学影像分析师、闲聊助手等角色。
+- **Supervisor 任务规划**：根据用户意图动态拆分任务队列，并在多个 Agent 之间调度执行。
+- **工具增强能力**：
+  - 医生端：更新患者信息、开具检查单、生成结构化诊断报告。
+  - 科普端：基于本地知识库的 RAG 检索与通俗解释。
+  - 心理端：PHQ-9 抑郁筛查与情绪支持。
+  - 影像端：X 光/CT 与皮肤病变的视觉分析。
+- **记忆与持久化**：
+  - 使用 LangGraph `MemorySaver` 管理对话状态。
+  - 自定义 `ChatStore` / `PatientStore` / `ReflectionStore`，以 JSON 文件持久化聊天历史、患者信息与反思记录。
+- **RAG 医学科普库**：基于 Chroma + OpenAIEmbeddings（SiliconFlow）构建本地医学知识向量库。
+- **Streamlit Web UI**：支持文本对话与图片上传（病历/患处照片），实时展示多轮对话与中间过程。
+
+---
+
+## 🗂 项目结构概览
+
+text .
+├── main.py                        # Streamlit 入口 & 与 LangGraph 交互
+├── .env                           # API Key 配置（DeepSeek / SiliconFlow）
+├── chroma_medical_db/             # Chroma 向量库持久化目录
+├── src/
+│   ├── Rag/
+│   │   ├── setup.py               # RAG 初始化（Chroma + Embedding + Retriever）
+│   │   └── Local_file/       # 本地医学科普知识源
+│   ├── graph/
+│   │   ├── state.py               # LangGraph State 定义（AgentState 等）
+│   │   ├── builder.py             # LangGraph 构图与编译（get_compiled_graph）
+│   │   ├── supervisor.py          # Supervisor 节点：意图判断 + 任务拆分 + 调度
+│   │   ├── edges.py               # 路由边逻辑（doctor/tutor/image 等）
+│   │   └── reflectors/            # 任务结果反思相关（core/config）
+│   ├── nodes/
+│   │   ├── agents/
+│   │   │   ├── doctor.py          # 医生节点：多轮问诊 + 工具调用
+│   │   │   ├── medical_tutor.py   # 医学科普节点：RAG 检索 + 通俗解释
+│   │   │   ├── psychologist_node.py # 心理咨询节点：PHQ-9 + 情绪支持
+│   │   │   ├── image_analyst.py   # 影像分析节点：多模态视觉分析
+│   │   │   ├── challenger_node.py # 质疑者节点：对诊断进行挑刺与追问
+│   │   │   └── joker_chat.py      # 闲聊节点：通用聊天
+│   │   └── memory/
+│   │       ├── context_filter_node.py # 上下文过滤节点
+│   │       ├── context_trim_node.py   # 上下文裁剪节点
+│   │       └── memory_load_node.py    # 记忆加载节点（患者历史信息）
+│   ├── tools/
+│   │   ├── doctor_tools.py        # 医生工具：更新病历、开检查单、生成诊断
+│   │   ├── medical_tutor_tools.py # 科普工具：local_knowledge_search(RAG)
+│   │   ├── psychologist_tools.py  # 心理工具：PHQ-9 评分、情绪支持
+│   │   └── image_analyst_tools.py # 影像工具：X 光/CT、皮肤病变分析
+│   ├── stores/
+│   │   ├── base.py                # Store 基类
+│   │   ├── chat_store.py          # 聊天历史持久化
+│   │   ├── patient_store.py       # 患者长期信息持久化
+│   │   └── reflection_store.py    # 反思与评审记录持久化
+│   ├── prompts/
+│   │   ├── supervisor.txt         # Supervisor 路由提示词
+│   │   ├── plan.txt               # 任务规划提示词
+│   │   ├── doctor.txt             # 医生问诊提示词
+│   │   └── joker.txt              # 闲聊提示词
+│   └── until/
+│       └── init_llm.py            # 全局 LLM 初始化（DeepSeek）
+└── ...
+---
+
+## 🧠 架构说明
+
+### 1. LangGraph State 设计
+
+核心状态定义在 `src/graph/state.py` 中的 `AgentState`：
+
+- **messages**: 对话消息列表（Human/AI/Tool）。
+- **patient_info**: 患者基本信息与病史（年龄、性别、症状、时长、严重程度、既往史、补充信息等）。
+- **lab_orders**: 检查/检验单列表。
+- **debate_history**: 辩论/质疑记录（用于 challenger 等场景）。
+- **final_diagnosis**: 最终诊断结论。
+- **task_list**: Supervisor 拆分的任务队列，每个任务包含：
+  - `task_id`
+  - `description`
+  - `assigned_agent`（DOCTOR/TUTOR/PSYCHOLOGIST/MEDICAL_IMAGE_ANALYST/CHAT）
+  - `status`（pending/completed）
+- **next_agent**: 下一个要执行的 Agent 名称。
+- **intent**: 当前意图标签（便于调试）。
+- **last_executed_agent**: 最近一次执行的 Agent。
+
+### 2. Supervisor 规划与调度
+
+`src/graph/supervisor.py` 中的 `supervisor_node` 负责：
+
+- 读取最近若干轮对话，判断用户新输入是否与上一轮任务相关（`is_intent_related`）。
+- 调用 LLM + `plan.txt` 提示词，将用户需求拆分为 `task_list`，并决定 `next_agent`。
+- 如果所有任务已完成：
+  - 检测到新的用户输入 → 清空任务队列，重新规划。
+  - 无新输入 → 结束本轮流程。
+
+### 3. 各 Agent 节点职责
+
+- **doctor_node**（`src/nodes/agents/doctor.py`）：
+  - 遵循 `doctor.txt` 提示词进行多轮问诊。
+  - 使用 `update_patient_record` 记录患者信息。
+  - 必要时调用 `order_lab_test` 开具检查。
+  - 信息充分后调用 `make_diagnosis` 生成 Markdown 诊断报告。
+  - 支持“退出问诊”指令，提前终止当前医生任务。
+
+- **medical_tutor_node**（`src/nodes/agents/medical_tutor.py`）：
+  - 针对分配给 `TUTOR` 的任务，调用 `local_knowledge_search` 从 RAG 中检索医学科普内容。
+  - 基于检索结果生成简短、通俗的中文解释。
+
+- **psychologist_node**（`src/nodes/agents/psychologist_node.py`）：
+  - 扮演心理咨询师，提供共情式对话。
+  - 可使用 PHQ-9 工具进行抑郁筛查，并根据分数给出建议。
+
+- **medical_image_analyst_node**（`src/nodes/agents/image_analyst.py`）：
+  - 从最新用户消息中提取文本与 Base64 图片。
+  - 结合任务描述，调用多模态 LLM 进行影像分析（X 光/CT/皮肤等）。
+
+- **challenger_node**（`src/nodes/agents/challenger_node.py`）：
+  - 阅读主治医生的诊断与患者信息，提出质疑与潜在风险点。
+  - 可用于内部“辩论”或审查流程。
+
+- **chat_node**（`src/nodes/agents/joker_chat.py`）：
+  - 处理闲聊类任务。
+  - 可根据反思结果（problem/suggestion）调整回答风格。
+
+### 4. 工具层（Tools）
+
+- **医生工具**（`src/tools/doctor_tools.py`）：
+  - `update_patient_record`: 更新患者档案，支持追加字段（如补充病史）。
+  - `order_lab_test`: 创建待完成的检查单。
+  - `make_diagnosis`: 汇总患者信息，调用 LLM 生成结构化诊断报告。
+
+- **科普工具**（`src/tools/medical_tutor_tools.py`）：
+  - `local_knowledge_search`: 使用 `RETRIEVER` 从 Chroma 中检索相关医学科普片段，返回 JSON。
+
+- **心理工具**（`src/tools/psychologist_tools.py`）：
+  - `perform_phq9_assessment`: 计算 PHQ-9 总分、分级与建议。
+  - `provide_emotional_support`: 标记正在进行情绪支持干预。
+
+- **影像工具**（`src/tools/image_analyst_tools.py`）：
+  - `analyze_x_ray_tool`: 分析 X 光/CT 等影像。
+  - `analyze_skin_tool`: 分析皮肤病变照片。
+
+### 5. RAG 医学科普库
+
+- 实现在 `src/Rag/setup.py`：
+  - 使用 `langchain_chroma.Chroma` 作为向量库。
+  - 使用 SiliconFlow 提供的 OpenAI 兼容 Embedding 接口（模型：`BAAI/bge-large-zh-v1.5`）。
+  - 从 `src/Rag/Local_file/a.txt` 加载文本，切分后构建向量索引，持久化到 `chroma_medical_db`。
+  - 暴露全局 `RETRIEVER` 供 `local_knowledge_search` 使用。
+
+### 6. 记忆与持久化 Stores
+
+- `ChatStore`：按 session_id 存储聊天历史。
+- `PatientStore`：按 patient_id 存储患者长期信息，支持字段追加（如多次就诊的病史累积）。
+- `ReflectionStore`：存储任务反思与评审意见，用于后续优化回答质量。
+
+---
+
+## 🚀 快速开始
+
+### 1. 环境准备
+
+- Python 3.9+（推荐 3.10/3.11）
+- 安装依赖（示例，具体以你实际使用的包为准）：
+
