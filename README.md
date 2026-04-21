@@ -129,7 +129,7 @@
   - 处理闲聊类任务。
   - 可根据反思结果（problem/suggestion）调整回答风格。
 
-### 4. 工具层（Tools）
+### 4. 工具层（列举部分工具）：
 
 - **医生工具**（`src/tools/doctor_tools.py`）：
   - `update_patient_record`: 更新患者档案，支持追加字段（如补充病史）。
