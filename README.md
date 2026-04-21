@@ -27,7 +27,7 @@
 
 ```text
 ├── main.py                        # Streamlit 入口 & 与 LangGraph 交互
-├── .env                           # API Key 配置（DeepSeek / SiliconFlow）
+├── .env                           # API Key 配置
 ├── chroma_medical_db/             # Chroma 向量库持久化目录
 └── src/
     ├── Rag/
@@ -66,7 +66,7 @@
     │   ├── plan.txt               # 任务规划提示词
     │   ├── doctor.txt             # 医生问诊提示词
     │   └── joker.txt              # 闲聊提示词
-    └── utils/                     # 修正原笔误：until → utils
+    └── utils/                     # 粗放初始化的LLm
         └── init_llm.py            # 全局 LLM 初始化（DeepSeek）
 ---
 
